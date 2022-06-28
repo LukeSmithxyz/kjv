@@ -4,9 +4,23 @@
 
 SELF="$0"
 
-get_data() {
-	sed '1,/^#EOF$/d' < "$SELF" | tar xz -O "$1"
+get_internal_tar() {
+	sed '1,/^#EOF$/d' < "$SELF"
 }
+
+get_data() {
+	get_internal_tar | tar xz -O "$1"
+}
+
+check_file() {
+	get_internal_tar | tar tzv | grep -c "$1"
+}
+
+get_data_file() {
+	printf "%s.tsv" "$(basename "$0")"
+}
+
+basename="$(basename "$0")"
 
 if [ -z "$PAGER" ]; then
 	if command -v less >/dev/null; then
@@ -47,6 +61,11 @@ show_help() {
 	exit 2
 }
 
+datafile="$(get_data_file)"
+[ "$(check_file "$datafile")" -ne 1 ] &&
+	echo "Invalid invocation; perhaps a wrong symlink?" &&
+	exit 1
+
 while [ $# -gt 0 ]; do
 	isFlag=0
 	firstChar="${1%"${1#?}"}"
@@ -59,7 +78,7 @@ while [ $# -gt 0 ]; do
 		break
 	elif [ "$1" = "-l" ]; then
 		# List all book names with their abbreviations
-		get_data kjv.tsv | awk -v cmd=list "$(get_data kjv.awk)"
+		get_data "$datafile" | awk -v cmd=list "$(get_data kjv.awk)"
 		exit
 	elif [ "$1" = "-W" ]; then
 		export KJV_NOLINEWRAP=1
@@ -72,6 +91,7 @@ while [ $# -gt 0 ]; do
 done
 
 cols=$(tput cols 2>/dev/null)
+# shellcheck disable=SC2181
 if [ $? -eq 0 ]; then
 	export KJV_MAX_WIDTH="$cols"
 fi
@@ -83,13 +103,13 @@ if [ $# -eq 0 ]; then
 
 	# Interactive mode
 	while true; do
-		printf "kjv> "
+		printf "%s> " "$basename"
 		if ! read -r ref; then
 			break
 		fi
-		get_data kjv.tsv | awk -v cmd=ref -v ref="$ref" "$(get_data kjv.awk)" | ${PAGER}
+		get_data "$datafile" | awk -v cmd=ref -v ref="$ref" "$(get_data kjv.awk)" | ${PAGER}
 	done
 	exit 0
 fi
 
-get_data kjv.tsv | awk -v cmd=ref -v ref="$*" "$(get_data kjv.awk)" | ${PAGER}
+get_data "$datafile" | awk -v cmd=ref -v ref="$*" "$(get_data kjv.awk)" | ${PAGER}

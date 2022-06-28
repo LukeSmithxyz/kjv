@@ -1,9 +1,6 @@
 # kjv
 
-Read the Word of God from your terminal
-
-Forked from [https://github.com/bontibon/kjv.git](https://github.com/bontibon/kjv.git) but with the Apocrypha added.
-
+Read the King James Version, Clementine Vulgate, and Greek Bible from your terminal.
 
 ## Usage
 
@@ -41,6 +38,37 @@ kjv can be built by cloning the repository and then running make:
     git clone https://github.com/lukesmithxyz/kjv.git
     cd kjv
     sudo make install
+
+## Usage
+    kjv # for the King James Version
+    grb # for the Greek Bible
+    vul # for the Clementine Vulgate
+
+## Notes on the Greek Bible (grb)
+- I/II Samuel and I/II Kings are named with their English titles despite the fact that in Greek they are respectively I-IV Kings. This is simply because the interface is in English and is supposed to be consistent with `kjv`.
+- What are in some versions the books Erza and Nehemiah are in the Septuagit 2 Esdras. However these books/verse can be accessed via either possible name.
+- Apochrophal and Deuterocanonical books included, including:
+	- 1 Esdras
+	- Judith
+	- Tobit
+	- I-IV Maccabees
+	- Odes
+	- Wisdom of Solomon
+	- Psalms of Solomon
+	- Zephaniah (Sophonias)
+	- Baruch
+	- Letter of Jeremiah
+	- Susanna
+	- Bel and the Dragon
+- Different editions of books from different texts:
+	- Judges (Alexandrinus (default) & Vaticanus)
+	- Tobit (Vaticanus/Alexandrinus (default) & Sinaiticus)
+	- Daniel (Theodotion)
+	- Susanna (Theodotion)
+	- Bel and the Dragon (Theodotion)
+
+## Notes on the Clementine Vulgate (vul)
+- I/II Samuel and I/II Kings are named with their English titles despite the fact that in Latin they are respectively I-IV Kings. This is simply because the interface is in English and is supposed to be consistent with `kjv`.
 
 ## License
 
